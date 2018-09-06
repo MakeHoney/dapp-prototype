@@ -11,14 +11,18 @@ contract Manager is Ownable {
     uint32 numOfAccount;
 
     constructor() public {
-        numOfAccount = 0;
+        numOfAccount = 1;
     }
 
     /* grade 실행제어자 설정하기 */
-    function register(string _name, uint8 _age, uint8 _grade, uint16 _height, uint16 _weight) public {
+    function register(string _name, uint8 _age, uint16 _height, uint16 _weight) public {
         require(accounts[msg.sender] == 0, "Account already exists.");
         ids[numOfAccount] = msg.sender;
-        accounts[msg.sender] = new User(msg.sender, _name, _age, _grade, _height, _weight, numOfAccount);
+        if(msg.sender != owner) {
+            accounts[msg.sender] = new User(msg.sender, _name, _age, 0, _height, _weight, numOfAccount);
+        } else {
+            accounts[msg.sender] = new User(owner, "Admin", 0, 1, 0, 0, 0);
+        }
         numOfAccount++;
     }
 
@@ -32,7 +36,7 @@ contract Manager is Ownable {
     }
 
     function getUserContractById(uint32 _idx) public view returns (address) {
-        require(numOfAccount > _idx, "Index is not correct.");
+        require(numOfAccount >= _idx, "Index is not correct.");
         return accounts[ids[_idx]];
     }
 
