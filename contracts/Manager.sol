@@ -19,6 +19,7 @@ contract Manager is Ownable {
         require(accounts[msg.sender] == 0, "Account already exists.");
         ids[numOfAccount] = msg.sender;
         if(msg.sender != owner) {
+            /* user account, name, age, grade, height, weight, userIndex */
             accounts[msg.sender] = new User(msg.sender, _name, _age, 0, _height, _weight, numOfAccount);
         } else {
             accounts[msg.sender] = new User(owner, "Admin", 0, 1, 0, 0, 0);
@@ -65,10 +66,10 @@ contract Manager is Ownable {
     ) {
         require(accounts[_userAddr] == 0, "User account is not correct.");
         User user = User(accounts[_userAddr]);
-        address addr;
+        address userAccount;
         uint8 grade;
         uint32 userIndex;
-        (addr,,,grade,,,userIndex) = user.getUserInfo();
-        return (addr, grade, userIndex);
+        (userAccount,,,grade,,,userIndex) = user.getUserInfo();
+        return (userAccount, grade, userIndex);
     }
 }
