@@ -44,7 +44,13 @@ contract Manager is Ownable {
     ) {
         require(accounts[_userAddr] == 0, "User account is not correct.");
         User user = User(accounts[_userAddr]);
-        string name;
+        /* memory <-> storage */
+        string memory name;
+        uint8 age;
+        uint16 height;
+        uint16 weight;
+        (,name,age,,height,weight,) = user.getUserInfo();
+        return (name, age, height, weight);
     }
 
     // addr이 필요한가?
