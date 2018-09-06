@@ -4,7 +4,7 @@ import "./Ownable.sol";
 import "./User.sol";
 
 contract Manager is Ownable {
-    // event 생성하기 
+    event comparison(address sender, address owner, bool flag);
 
     mapping (address => address) accounts;
     mapping (uint32 => address) ids;
@@ -17,14 +17,17 @@ contract Manager is Ownable {
     /* grade 실행제어자 설정하기 */
     function register(string _name, uint8 _age, uint16 _height, uint16 _weight) public {
         require(accounts[msg.sender] == 0, "Account already exists.");
-        ids[numOfAccount] = msg.sender;
+        msg.sender != owner ? ids[numOfAccount] = msg.sender : ids[0] = owner;
+
         if(msg.sender != owner) {
+            emit comparison(msg.sender, owner, true);
             /* user account, name, age, grade, height, weight, userIndex */
             accounts[msg.sender] = new User(msg.sender, _name, _age, 0, _height, _weight, numOfAccount);
+            numOfAccount++;
         } else {
+            emit comparison(msg.sender, owner, false);
             accounts[msg.sender] = new User(owner, "Admin", 0, 1, 0, 0, 0);
         }
-        numOfAccount++;
     }
 
     function getNumOfUsers() external view onlyOwner returns (uint) {
@@ -32,7 +35,7 @@ contract Manager is Ownable {
     }
 
     function getUserContract(address _userAddr) public view returns (address) {
-        require(accounts[_userAddr] == 0, "User account is not correct.");
+        require(accounts[_userAddr] != 0, "User account is not correct.");
         return accounts[_userAddr];
     }
 
@@ -47,7 +50,7 @@ contract Manager is Ownable {
         uint16,
         uint16
     ) {
-        require(accounts[_userAddr] == 0, "User account is not correct.");
+        require(accounts[_userAddr] != 0, "User account is not correct.");
         User user = User(accounts[_userAddr]);
         /* memory <-> storage */
         string memory name;
@@ -64,7 +67,7 @@ contract Manager is Ownable {
         uint8,
         uint32
     ) {
-        require(accounts[_userAddr] == 0, "User account is not correct.");
+        require(accounts[_userAddr] != 0, "User account is not correct.");
         User user = User(accounts[_userAddr]);
         address userAccount;
         uint8 grade;
