@@ -14,6 +14,11 @@ contract Manager is Ownable {
         numOfAccount = 1;
     }
 
+    modifier isExist(address _userAddr) {
+        require(accounts[_userAddr] != 0, "User doesn't exist");
+        _;
+    }
+
     /* grade 실행제어자 설정하기 */
     function register(string _name, uint8 _age, uint16 _height, uint16 _weight) public {
         require(accounts[msg.sender] == 0, "Account already exists.");
@@ -34,8 +39,7 @@ contract Manager is Ownable {
         return numOfAccount;
     }
 
-    function getUserContract(address _userAddr) public view returns (address) {
-        require(accounts[_userAddr] != 0, "User account is not correct.");
+    function getUserContract(address _userAddr) public view isExist(_userAddr) returns (address) {
         return accounts[_userAddr];
     }
 
@@ -44,13 +48,12 @@ contract Manager is Ownable {
         return accounts[ids[_idx]];
     }
 
-    function getBasicUserInfo(address _userAddr) public view returns(
+    function getBasicUserInfo(address _userAddr) public view isExist(_userAddr) returns(
         string,
         uint8,
         uint16,
         uint16
     ) {
-        require(accounts[_userAddr] != 0, "User account is not correct.");
         User user = User(accounts[_userAddr]);
         /* memory <-> storage */
         string memory name;
@@ -61,13 +64,11 @@ contract Manager is Ownable {
         return (name, age, height, weight);
     }
 
-    // addr이 필요한가?
-    function getAdditionalUserInfo(address _userAddr) public view returns (
+    function getAdditionalUserInfo(address _userAddr) public view isExist(_userAddr) returns (
         address,
         uint8,
         uint32
     ) {
-        require(accounts[_userAddr] != 0, "User account is not correct.");
         User user = User(accounts[_userAddr]);
         address userAccount;
         uint8 grade;
