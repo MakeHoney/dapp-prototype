@@ -19,7 +19,7 @@ export default new Vuex.Store({
   },
   mutations: {
     registerWeb3Instance (state, payload) {
-        console.log('registerWeb3Instance Nutation being executed', payload);
+        console.log('registerWeb3Instance Mutation being executed', payload);
 
         /* web3Copy 없이 리팩토링해보기 */
         let result = payload;

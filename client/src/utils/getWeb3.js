@@ -5,7 +5,7 @@ let getWeb3 = new Promise((resolve, reject) => {
   if(typeof web3js !== 'undefined') {
     let web3 = new Web3(web3js.currentProvider);
     resolve({
-      injectedWeb3: web3.isConnected(),
+      injectedWeb3: web3.isConnected,
       web3 () {
         return web3;
       }
@@ -15,7 +15,7 @@ let getWeb3 = new Promise((resolve, reject) => {
   }
 }).then(result => {
   return new Promise((resolve, reject) => {
-    result.web3().version.getNetwork((err, networkId) => {
+    result.web3().eth.net.getNetworkType((err, networkId) => {
       if(err) {
         reject(new Error('Unable to retrieve network ID'));
       } else {

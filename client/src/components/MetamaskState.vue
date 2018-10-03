@@ -1,0 +1,33 @@
+<template>
+    <div class="metamask-info">
+        <p v-if="isInjected" id="has-metamask">Metamask Installed</p>
+        <p v-else id="no-metamask">Metamask not found</p>
+        <p>Network: {{ network }}</p>
+        <p>Account: {{ coinbase }}</p>
+        <p>Balance: {{ balance }} Wei</p>
+    </div>
+</template>
+
+<script>
+import { NETWORKS } from '../utils/constants/networks'
+import { mapState } from 'vuex'
+
+export default {
+    name: 'metamask-state',
+    computed: mapState ({
+        isInjected: state => state.web3.isInjected,
+        network: state => NETWORKS[state.web3.networkId],
+        coinbase: state => state.web3.coinbase,
+        balance: state => state.web3.balance
+    })
+}
+</script>
+
+<style scoped>
+#has-metamask {
+    color: green;
+}
+#no-metamask {
+    color: red;
+}
+</style>
